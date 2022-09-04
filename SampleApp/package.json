@@ -1,0 +1,39 @@
+{
+  "name": "com.singular.singularapp4",
+  "displayName": "SampleApp",
+  "version": "1.0.0",
+  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Apache Cordova Team",
+  "license": "Apache-2.0",
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-dialogs": {},
+      "cordova-custom-config": {},
+      "cordova-plugin-purchase": {
+        "BILLING_KEY": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnKlLP7SnhPIPgbC9Hrk3i95zwT+4eftOamFHaPKqcR4bgKHepNWKSa8AF32H3l0wRpN3FzXPJwJ8fTCQc8kq1Hcyn00W47DLoCXu2vVhm+H259WkQ6acBikclFmAC03jj8MfAjtZNEVWd96pfjCST//i2qAuVzJuYRwpYexNTN1z893yRKSj3HSjVtHKqu+v4mmvPkwlxJpH4ACgtdtlT4hSYA4CcawGTaIQGAs/KWWHvlnLfYwS0niMFK2hCLfmEAIwPkTvZid3nKtE847DtPqXnAmKkAlpMBFTKI3WfYXWnuVvjvbXzgJa8CQ/ZjdxwsJCPZOq8q9B8btqDqF4jQIDAQAB"
+      },
+      "singular_cordova_sdk": {},
+      "cordova-plugin-wkwebview-file-xhr": {}
+    },
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "devDependencies": {
+    "cordova-android": "^10.1.2",
+    "cordova-custom-config": "^5.1.1",
+    "cordova-ios": "^6.2.0",
+    "cordova-plugin-dialogs": "^2.0.2",
+    "cordova-plugin-purchase": "^11.0.0",
+    "cordova-plugin-wkwebview-file-xhr": "^3.1.0",
+    "singular_cordova_sdk": "file:../SingularCordovaSdk"
+  }
+}

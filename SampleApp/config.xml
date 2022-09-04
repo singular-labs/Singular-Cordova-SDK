@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.singular.singularapp4" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>SampleApp</name>
+    <description>Sample Apache Cordova App</description>
+    <author email="dev@cordova.apache.org" href="https://cordova.apache.org">
+        Apache Cordova Team
+    </author>
+    <preference name="allowFileAccessFromFileURLs" value="true" />
+    <preference name="allowUniversalAccessFromFileURLs" value="true" />
+    <content src="index.html" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <platform name="android">
+        <!-- Cordova activity-level config-file block -->
+        <hook type="before_build" src="scripts/updateMainActivity.sh" />
+        <hook type="after_platform_add" src="scripts/updateMainActivity.sh" />
+        <hook type="after_prepare" src="scripts/updateMainActivity.sh" />
+        <custom-config-file parent="./application/activity/[@android:name='MainActivity']" target="AndroidManifest.xml">
+            <intent-filter>
+                <data android:scheme="singular" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </custom-config-file>
+    </platform>
+    <platform name="ios">
+        <hook type="before_build" src="scripts/updateAppDelegate.sh" />
+        <hook type="after_platform_add" src="scripts/updateAppDelegate.sh" />
+        <hook type="after_prepare" src="scripts/updateAppDelegate.sh" />
+        <custom-config-file platform="ios" target="Entitlements-Release.plist" parent="com.apple.developer.associated-domains" mode="replace">
+            <array>
+                <string>applinks:sample.sng.link</string>
+            </array>
+        </custom-config-file>
+        <custom-config-file platform="ios" target="Entitlements-Debug.plist" parent="com.apple.developer.associated-domains" mode="replace">
+            <array>
+                <string>applinks:sample.sng.link</string>
+            </array>
+        </custom-config-file>
+    </platform>
+</widget>
