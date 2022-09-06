@@ -40,9 +40,8 @@ $ cordova plugin add singular_cordova_sdk
   
 ## <a id="guides"> 📖 Guides  
   
-Great installation and setup guides can be viewed [here](https://support.singular.net/hc/en-us/articles/360037581952-Android-SDK-Basic-Integration).  
-- [init SDK Guide](https://support.singular.net/hc/en-us/articles/360037581952-Android-SDK-Basic-Integration)  
-- [Deeplinking Guide](https://support.singular.net/hc/en-us/articles/360037581952-Android-SDK-Basic-Integration)  
+Great installation, usage and setup guides can be viewed [here](https://support.singular.net/hc/en-us/articles/8586543222683).  
+
 
   
   
@@ -67,7 +66,7 @@ document.addEventListener('deviceready', function() {
   
   
 ## <a id="sample-app"> 📱 Sample App  
-A sample app can be found in [here](https://support.singular.net/hc/en-us/articles/360037581952-Android-SDK-Basic-Integration)
+A sample app can be found in [here](https://github.com/singular-labs/Singular-Cordova-SDK/tree/main/SampleApp)
 ## <a id="ionic"> 📍 Ionic  
 
   
