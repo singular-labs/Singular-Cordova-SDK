@@ -48,6 +48,11 @@ SingularConfig.prototype.withConversionValueUpdatedHandler = function(conversion
     return this;
 }
 
+SingularConfig.prototype.withConversionValuesUpdatedHandler = function(conversionValuesUpdatedHandler) {
+    this.conversionValuesUpdatedHandler = conversionValuesUpdatedHandler;
+    return this;
+}
+
 SingularConfig.prototype.withWaitForTrackingAuthorizationWithTimeoutInterval = function(waitForTrackingAuthorizationWithTimeoutInterval) {
     this.waitForTrackingAuthorizationWithTimeoutInterval = waitForTrackingAuthorizationWithTimeoutInterval;
     return this;

@@ -5,15 +5,18 @@ const ADMON_REVENUE_EVENT_NAME = '__ADMON_USER_LEVEL_REVENUE__';
 module.exports.init = function(singularConfig) {
     var singularLinkHandler = singularConfig.singularLinkHandler;
     var conversionValueUpdatedHandler = singularConfig.conversionValueUpdatedHandler;
+    var conversionValuesUpdatedHandler = singularConfig.conversionValuesUpdatedHandler;
     var callback = function(message) {
         var messageObject = JSON.parse(message);
         switch(messageObject.type) {
             case "SingularLinkHandler":
                 singularLinkHandler(messageObject.data);
                 break;
-            
             case "ConversionValueUpdatedHandler":
                 conversionValueUpdatedHandler(messageObject.data);
+                break;
+            case "ConversionValuesUpdatedHandler":
+                conversionValuesUpdatedHandler(messageObject.data);
                 break;
 
             case "InitDone":
@@ -128,6 +131,16 @@ module.exports.skanUpdateConversionValue = function(value, success) {
             success(false);
         }
     }, function(){}, 'SingularCordovaSdk', 'skanUpdateConversionValue', [value]);   
+}
+
+module.exports.skanUpdateConversionValues = function(value, coarse, lock, success) {
+    exec(function(res) {
+        if (res == 'true') {
+            success(true);
+        } else {
+            success(false);
+        }
+    }, function(){}, 'SingularCordovaSdk', 'skanUpdateConversionValues', [value, coarse, lock]);   
 }
 
 module.exports.skanGetConversionValue = function(success) {
