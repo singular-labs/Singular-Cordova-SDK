@@ -61,6 +61,23 @@ static SingularCordovaSdk * instance;
         [self.commandDelegate sendPluginResult:pluginResult callbackId:initCallbackID];
 }
 
+- (void)handleConversionValues: (NSInteger )conversionValue coarse: (NSInteger) coarse lock: (BOOL) lock{
+        NSDictionary * paramsDict = @{
+            @"type": @"ConversionValuesUpdatedHandler",
+            @"data": @{
+                @"value": [NSNumber numberWithInteger:conversionValue],
+                @"coarse": [NSNumber numberWithInteger:coarse],
+                @"lock": lock ? @YES : @NO
+            }
+        };
+        NSError * err;
+        NSData * jsonData = [NSJSONSerialization dataWithJSONObject:paramsDict options:0 error:&err]; 
+        NSString * jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
+        [pluginResult setKeepCallbackAsBool:YES];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:initCallbackID];
+}
+
 
 - (void )createReferrerShortLink:(CDVInvokedUrlCommand*)command
 {
@@ -149,6 +166,15 @@ static SingularCordovaSdk * instance;
     singularConfig.conversionValueUpdatedCallback = ^(NSInteger conversionValue) {
         [self handleConversionValue: conversionValue];
  
+    };
+
+    singularConfig.conversionValueUpdatedCallback = ^(NSInteger conversionValue) {
+        [self handleConversionValue: conversionValue];
+ 
+    };
+
+    singularConfig.conversionValuesUpdatedCallback = ^(NSNumber * conversionValue, NSNumber * coarse, BOOL lock) {
+        [self handleConversionValues: conversionValue ? [conversionValue intValue] : -1 coarse: coarse ? [coarse intValue] :  -1 lock: lock];
     };
 
     singularConfig.waitForTrackingAuthorizationWithTimeoutInterval =
@@ -305,6 +331,16 @@ static SingularCordovaSdk * instance;
     NSNumber* conversionValue = [command.arguments objectAtIndex:0];
     BOOL res = [Singular skanUpdateConversionValue:[conversionValue intValue] ];
     CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:res? @"true": @"false"];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
+}
+
+- (void)skanUpdateConversionValues:(CDVInvokedUrlCommand*)command
+{
+    NSNumber* conversionValue = [command.arguments objectAtIndex:0];
+    NSNumber* coarse = [command.arguments objectAtIndex:1];
+    NSNumber* lock = [command.arguments objectAtIndex:2];
+    [Singular skanUpdateConversionValue:[conversionValue intValue] coarse:[coarse intValue] lock:[lock boolValue]];
+    CDVPluginResult *  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"true"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 }
 
