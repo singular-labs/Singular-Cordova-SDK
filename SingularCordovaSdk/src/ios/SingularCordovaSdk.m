@@ -43,7 +43,7 @@ static SingularCordovaSdk * instance;
         NSError * err;
         NSData * jsonData = [NSJSONSerialization dataWithJSONObject:paramsDict options:0 error:&err]; 
         NSString * jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
+        CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
         [pluginResult setKeepCallbackAsBool:YES];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:initCallbackID];
 }
@@ -56,7 +56,7 @@ static SingularCordovaSdk * instance;
         NSError * err;
         NSData * jsonData = [NSJSONSerialization dataWithJSONObject:paramsDict options:0 error:&err];
         NSString * jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
+        CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
         [pluginResult setKeepCallbackAsBool:YES];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:initCallbackID];
 }
@@ -73,7 +73,7 @@ static SingularCordovaSdk * instance;
         NSError * err;
         NSData * jsonData = [NSJSONSerialization dataWithJSONObject:paramsDict options:0 error:&err]; 
         NSString * jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
+        CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
         [pluginResult setKeepCallbackAsBool:YES];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:initCallbackID];
 }
@@ -90,7 +90,7 @@ static SingularCordovaSdk * instance;
                            referrerId:refId
                     passthroughParams:passthroughParams
                     completionHandler:^(NSString *data, NSError *error) {
-                        CDVPluginResult* pluginResult = nil;
+                        CDVPluginResult * pluginResult = nil;
                         if (error) {
                             NSDictionary * paramsDict = @{
                                 @"type": @"OnError",
@@ -99,7 +99,7 @@ static SingularCordovaSdk * instance;
                             NSError * err;
                             NSData * jsonData = [NSJSONSerialization dataWithJSONObject:paramsDict options:0 error:&err];
                             NSString * jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-                            CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
+                            CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
                             [pluginResult setKeepCallbackAsBool:YES];
                             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
                         }
@@ -112,7 +112,7 @@ static SingularCordovaSdk * instance;
                             NSError * err;
                             NSData * jsonData = [NSJSONSerialization dataWithJSONObject:paramsDict options:0 error:&err];
                             NSString * jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-                            CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
+                            CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
                             [pluginResult setKeepCallbackAsBool:YES];
                             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];                        
                         }
@@ -124,7 +124,7 @@ static SingularCordovaSdk * instance;
     NSError * err;
     NSData * jsonData = [NSJSONSerialization dataWithJSONObject:paramsDict options:0 error:&err];
     NSString * jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
     [pluginResult setKeepCallbackAsBool:YES];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 
@@ -206,7 +206,7 @@ static SingularCordovaSdk * instance;
     NSError * err;
     NSData * jsonData = [NSJSONSerialization dataWithJSONObject:paramsDict options:0 error:&err];
     NSString * jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
     [pluginResult setKeepCallbackAsBool:YES];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 }
@@ -215,7 +215,7 @@ static SingularCordovaSdk * instance;
 {
     NSString* eventName = [command.arguments objectAtIndex:0];
     [Singular event:eventName];
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -224,7 +224,7 @@ static SingularCordovaSdk * instance;
     NSString* eventName = [command.arguments objectAtIndex:0];
     NSDictionary* args = [command.arguments objectAtIndex:1];
     [Singular event:eventName withArgs:args];
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -233,7 +233,7 @@ static SingularCordovaSdk * instance;
     NSString* currency = [command.arguments objectAtIndex:0];
     NSNumber* amount = [command.arguments objectAtIndex:1];
     [Singular revenue:currency amount:[amount doubleValue]];
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -243,7 +243,7 @@ static SingularCordovaSdk * instance;
     NSNumber* amount = [command.arguments objectAtIndex:1];
     NSDictionary* args = [command.arguments objectAtIndex:2];
     [Singular revenue:currency amount:[amount doubleValue] withAttributes:args];
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -253,7 +253,7 @@ static SingularCordovaSdk * instance;
     NSString* currency = [command.arguments objectAtIndex:1];
     NSNumber* amount = [command.arguments objectAtIndex:2];
     [Singular customRevenue:eventName currency:currency amount:[amount doubleValue]];
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -264,7 +264,7 @@ static SingularCordovaSdk * instance;
     NSNumber* amount = [command.arguments objectAtIndex:2];
     NSDictionary* args = [command.arguments objectAtIndex:3];
     [Singular customRevenue:eventName currency:currency amount:[amount doubleValue] withAttributes:args];
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -272,42 +272,42 @@ static SingularCordovaSdk * instance;
 {
     NSString* token = [command.arguments objectAtIndex:0];
     [Singular registerDeviceTokenForUninstall:[token dataUsingEncoding:NSUTF8StringEncoding]];
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)trackingOptIn:(CDVInvokedUrlCommand*)command
 {
     [Singular trackingOptIn];
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)trackingUnder13:(CDVInvokedUrlCommand*)command
 {
     [Singular trackingUnder13];
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)stopAllTracking:(CDVInvokedUrlCommand*)command
 {
     [Singular stopAllTracking];
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)resumeAllTracking:(CDVInvokedUrlCommand*)command
 {
     [Singular resumeAllTracking];
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)isAllTrackingStopped:(CDVInvokedUrlCommand*)command
 {
     BOOL res = [Singular isAllTrackingStopped];
-    CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:res? @"true": @"false"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:res? @"true": @"false"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 }
 
@@ -315,14 +315,14 @@ static SingularCordovaSdk * instance;
 {
     NSNumber* limitDataSharingValue = [command.arguments objectAtIndex:0];
     [Singular limitDataSharing:[limitDataSharingValue boolValue]];
-    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"ok"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)getLimitDataSharing:(CDVInvokedUrlCommand*)command
 {
     BOOL res = [Singular getLimitDataSharing];
-    CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:res? @"true": @"false"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:res? @"true": @"false"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 }
 
@@ -330,7 +330,7 @@ static SingularCordovaSdk * instance;
 {
     NSNumber* conversionValue = [command.arguments objectAtIndex:0];
     BOOL res = [Singular skanUpdateConversionValue:[conversionValue intValue] ];
-    CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:res? @"true": @"false"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:res? @"true": @"false"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 }
 
@@ -340,14 +340,14 @@ static SingularCordovaSdk * instance;
     NSNumber* coarse = [command.arguments objectAtIndex:1];
     NSNumber* lock = [command.arguments objectAtIndex:2];
     [Singular skanUpdateConversionValue:[conversionValue intValue] coarse:[coarse intValue] lock:[lock boolValue]];
-    CDVPluginResult *  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"true"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"true"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 }
 
 - (void)skanGetConversionValue:(CDVInvokedUrlCommand*)command
 {
     NSNumber * res = [Singular skanGetConversionValue];
-    CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[res stringValue]];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[res stringValue]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 }
 
@@ -358,7 +358,7 @@ static SingularCordovaSdk * instance;
     NSNumber* overrideExisting = [command.arguments objectAtIndex:2];
     BOOL res = [Singular setGlobalProperty:key andValue:value overrideExisting:[overrideExisting boolValue]];
 
-    CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:res? @"true": @"false"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:res? @"true": @"false"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 }
 
@@ -366,14 +366,14 @@ static SingularCordovaSdk * instance;
 {
     NSString* key = [command.arguments objectAtIndex:0];
     [Singular unsetGlobalProperty:key];
-    CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"ok"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"ok"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 }
 
 - (void)clearGlobalProperties:(CDVInvokedUrlCommand*)command
 {
     [Singular clearGlobalProperties];
-    CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"ok"];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"ok"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 }
 
@@ -383,14 +383,14 @@ static SingularCordovaSdk * instance;
     NSError * err;
     NSData * jsonData = [NSJSONSerialization dataWithJSONObject:res options:0 error:&err];
     NSString * jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: jsonString];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: jsonString];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 }
 
 - (void)skanRegisterAppForAdNetworkAttribution:(CDVInvokedUrlCommand*)command
 {
     [Singular skanRegisterAppForAdNetworkAttribution];
-    CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"ok" ];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"ok" ];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 }
 
@@ -399,7 +399,7 @@ static SingularCordovaSdk * instance;
     NSString* wrapper = [command.arguments objectAtIndex:0];
     NSString* version = [command.arguments objectAtIndex:1];
     [Singular setWrapperName:wrapper andVersion:version];
-    CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"ok" ];
+    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"ok" ];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 }
 
