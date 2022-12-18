@@ -339,11 +339,8 @@ static SingularCordovaSdk * instance;
     NSNumber* conversionValue = [command.arguments objectAtIndex:0];
     NSNumber* coarse = [command.arguments objectAtIndex:1];
     NSNumber* lock = [command.arguments objectAtIndex:2];
-    int a = [conversionValue intValue];
-    int b = [coarse intValue];
-    BOOL c = [lock boolValue];
     [Singular skanUpdateConversionValue:[conversionValue intValue] coarse:[coarse intValue] lock:[lock boolValue]];
-    CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"true"];
+    CDVPluginResult *  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"true"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 }
 
