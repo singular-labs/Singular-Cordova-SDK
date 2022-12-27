@@ -57,6 +57,7 @@ var Controller = function() {
                 $("#resume_all_tracking").on("click", self.resumeAllTrackingClicked);
                 $("#is_all_tracking_stopped").on("click", self.isAllTrackingStoppedClicked);
                 $("#skan_update_conversion_value").on("click", self.skanUpdateConversionValueClicked);
+                $("#skan_update_conversion_values").on("click", self.skanUpdateConversionValuesClicked);
                 $("#skan_get_conversion_value").on("click", self.skanGetConversionValueClicked);
                 $("#set_global_property").on("click", self.setGlobalPropertyClicked);
                 $("#unset_global_property").on("click", self.unsetGlobalPropertyClicked);
@@ -227,6 +228,13 @@ var Controller = function() {
                         function(val){
                             navigator.notification.alert('value: ' + val, function(){}, ['alert'], ['ok'])
                         })
+                })
+            
+        },
+        skanUpdateConversionValuesClicked:function(){
+            cordova.plugins.SingularCordovaSdk.skanUpdateConversionValues(1, 2, true,
+                function(val){
+                    navigator.notification.alert('value: ' + val, function(){}, ['alert'], ['ok'])
                 })
             
         },
