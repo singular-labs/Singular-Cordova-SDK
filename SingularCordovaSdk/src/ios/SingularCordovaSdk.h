@@ -1,12 +1,13 @@
 #import <Cordova/CDV.h>
 @interface SingularCordovaSdk : CDVPlugin {
   // Member variables go here.
-  
+
 }
 @property (class) NSDictionary *launchOptions;
 
 - (void)init:(CDVInvokedUrlCommand*)command;
 - (void)createReferrerShortLink:(CDVInvokedUrlCommand*)command;
+- (void)setCustomUserId:(CDVInvokedUrlCommand*)command;
 - (void)event:(CDVInvokedUrlCommand*)command;
 - (void)eventWithArgs:(CDVInvokedUrlCommand*)command;
 - (void)revenue:(CDVInvokedUrlCommand*)command;
