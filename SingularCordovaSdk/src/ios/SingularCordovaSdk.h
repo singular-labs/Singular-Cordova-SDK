@@ -1,7 +1,6 @@
 #import <Cordova/CDV.h>
 @interface SingularCordovaSdk : CDVPlugin {
   // Member variables go here.
-
 }
 @property (class) NSDictionary *launchOptions;
 
