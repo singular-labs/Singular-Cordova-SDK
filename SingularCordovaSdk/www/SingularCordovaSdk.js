@@ -28,6 +28,10 @@ module.exports.init = function(singularConfig) {
     exec(function (){}, function (){}, 'SingularCordovaSdk', 'setSDKVersion', ["Cordova", PLUGIN_VERSION]);
 }
 
+module.exports.setCustomUserId = (customUserId) => {
+    exec(function(){}, function(){}, 'SingularCordovaSdk', 'setCustomUserId', [customUserId]);
+}
+
 module.exports.createReferrerShortLink = function(url, refName, refId, passthroughParams, resultHandler) {
 
     var onSuccess = resultHandler.onSuccess;
