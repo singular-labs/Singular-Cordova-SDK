@@ -19,12 +19,12 @@
       "cordova-plugin-purchase": {
         "BILLING_KEY": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnKlLP7SnhPIPgbC9Hrk3i95zwT+4eftOamFHaPKqcR4bgKHepNWKSa8AF32H3l0wRpN3FzXPJwJ8fTCQc8kq1Hcyn00W47DLoCXu2vVhm+H259WkQ6acBikclFmAC03jj8MfAjtZNEVWd96pfjCST//i2qAuVzJuYRwpYexNTN1z893yRKSj3HSjVtHKqu+v4mmvPkwlxJpH4ACgtdtlT4hSYA4CcawGTaIQGAs/KWWHvlnLfYwS0niMFK2hCLfmEAIwPkTvZid3nKtE847DtPqXnAmKkAlpMBFTKI3WfYXWnuVvjvbXzgJa8CQ/ZjdxwsJCPZOq8q9B8btqDqF4jQIDAQAB"
       },
-      "singular_cordova_sdk": {},
-      "cordova-plugin-wkwebview-file-xhr": {}
+      "cordova-plugin-wkwebview-file-xhr": {},
+      "singular_cordova_sdk": {}
     },
     "platforms": [
-      "android",
-      "ios"
+      "ios",
+      "android"
     ]
   },
   "devDependencies": {

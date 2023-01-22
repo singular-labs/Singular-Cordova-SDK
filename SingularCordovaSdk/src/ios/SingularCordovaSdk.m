@@ -402,4 +402,19 @@ static SingularCordovaSdk* instance;
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 }
 
+- (void)setCustomUserId:(CDVInvokedUrlCommand*)command
+{
+    NSString* userId = [command.arguments objectAtIndex:0];
+    [Singular setCustomUserId:userId];
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"ok" ];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
+}
+
+- (void)unsetCustomUserId:(CDVInvokedUrlCommand*)command
+{
+    [Singular unsetCustomUserId];
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"ok" ];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
+}
+
 @end
