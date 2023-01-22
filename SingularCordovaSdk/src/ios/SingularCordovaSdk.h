@@ -28,6 +28,8 @@
 - (void)getGlobalProperties:(CDVInvokedUrlCommand*)command;
 - (void)skanRegisterAppForAdNetworkAttribution:(CDVInvokedUrlCommand*)command;
 - (void)setSDKVersion:(CDVInvokedUrlCommand*)command;
+- (void)setCustomUserId:(CDVInvokedUrlCommand*)command;
+- (void)unsetCustomUserId:(CDVInvokedUrlCommand*)command;
 - (void)pluginInitialize;
 + (void)startSessionWithUserActivity:(NSUserActivity*)userActivity;
 

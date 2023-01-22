@@ -176,3 +176,12 @@ module.exports.getGlobalProperties = function(success) {
 module.exports.skanRegisterAppForAdNetworkAttribution = function() {
     exec(function(){}, function(){}, 'SingularCordovaSdk', 'skanRegisterAppForAdNetworkAttribution', []);   
 }
+
+module.exports.setCustomUserId = function(userId) {
+    exec(function(){}, function(){}, 'SingularCordovaSdk', 'setCustomUserId', [userId]);   
+}
+
+module.exports.unsetCustomUserId = function(userId) {
+    exec(function(){}, function(){}, 'SingularCordovaSdk', 'unsetCustomUserId', []);   
+}
+

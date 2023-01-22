@@ -64,6 +64,8 @@ var Controller = function() {
                 $("#clear_global_properties").on("click", self.clearGlobalPropertiesClicked);
                 $("#get_global_properties").on("click", self.getGlobalPropertiesClicked);
                 $("#skan_register_app_for_ad_network_attribution").on("click", self.skanRegisterAppForAdNetworkAttributionClicked);
+                $("#set_custom_user_id").on("click", self.setCustomUserIdClicked);
+                $("#unset_custom_user_id").on("click", self.unsetCustomUserIdClicked);
             });
         },
         renderEventView: function() {
@@ -264,6 +266,12 @@ var Controller = function() {
         },
         skanRegisterAppForAdNetworkAttributionClicked:function(){
             cordova.plugins.SingularCordovaSdk.skanRegisterAppForAdNetworkAttribution()
+        },
+        setCustomUserIdClicked:function(){
+            cordova.plugins.SingularCordovaSdk.setCustomUserId('CustomUserId');
+        },
+        unsetCustomUserIdClicked:function(){
+            cordova.plugins.SingularCordovaSdk.unsetCustomUserId();
         }
     }
     controller.initialize();
