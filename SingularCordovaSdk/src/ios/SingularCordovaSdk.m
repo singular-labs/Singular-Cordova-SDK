@@ -141,7 +141,6 @@ static SingularCordovaSdk* instance;
 
     // Singular Links fields
     singularConfig.launchOptions = _launchOptions;
-    singularConfig.supportedDomains = [singularConfigDict objectForKey:@"supportedDomains"];
     singularConfig.shortLinkResolveTimeOut = [[singularConfigDict objectForKey:@"shortLinkResolveTimeout"] longValue];
     singularConfig.singularLinksHandler = ^(SingularLinkParams* params){
         [self handleSingularLink: params];
