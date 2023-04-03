@@ -1,4 +1,4 @@
-<plugin id="singular_cordova_sdk" version="1.0.6"
+<plugin id="singular_cordova_sdk" version="1.0.7"
 	xmlns="http://apache.org/cordova/ns/plugins/1.0"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<name>SingularCordovaSdk</name>
@@ -26,7 +26,7 @@
                 <source url="https://github.com/CocoaPods/Specs.git"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="Singular-SDK" spec="~> 12.0.2" />
+                <pod name="Singular-SDK" spec="~> 12.0.3" />
             </pods>
         </podspec>
 		<config-file parent="/*" target="config.xml">
