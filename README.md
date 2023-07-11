@@ -22,8 +22,8 @@
   
 ### <a id="plugin-build-for"> This plugin is built for  
   
-- iOS Singular SDK **v12.0.3**  
-- Android Singular SDK **12.1.1**  
+- iOS Singular SDK **v12.0.7**  
+- Android Singular SDK **12.1.3**  
   
 
   
