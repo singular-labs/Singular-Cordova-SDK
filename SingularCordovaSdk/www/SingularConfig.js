@@ -2,7 +2,7 @@ function SingularConfig(apikey, secret) {
         this.apikey = apikey;
         this.secret = secret;
         this.sessionTimeout = -1; // default -1, uses default timeout (60s)
-        this.skAdNetworkEnabled = false;
+        this.skAdNetworkEnabled = true;
         this.manualSkanConversionManagement = false;
         this.waitForTrackingAuthorizationWithTimeoutInterval = 0;
         this.limitDataSharing = null;
