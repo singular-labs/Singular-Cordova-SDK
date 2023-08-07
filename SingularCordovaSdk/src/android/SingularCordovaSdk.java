@@ -305,6 +305,7 @@ public class SingularCordovaSdk extends CordovaPlugin {
                     data.put("deeplink", singularLinkParams.getDeeplink());
                     data.put("passthrough", singularLinkParams.getPassthrough());
                     data.put("isDeferred", singularLinkParams.isDeferred());
+                    data.put("urlParameters", singularLinkParams.getUrlParameters());
                     res.put("data", data);
 
                     PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, res.toString());
