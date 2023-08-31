@@ -37,7 +37,8 @@ static SingularCordovaSdk* instance;
             @"data": @{
                 @"deeplink": [params getDeepLink] ? [params getDeepLink] : @"",
                 @"passthrough": [params getPassthrough] ? [params getPassthrough] : @"",
-                @"isDeferred": [params isDeferred] ? @YES : @NO
+                @"isDeferred": [params isDeferred] ? @YES : @NO,
+                @"urlParameters": [params getUrlParameters] ? [params getUrlParameters] : @{ }
             }
         };
         NSError* err;
