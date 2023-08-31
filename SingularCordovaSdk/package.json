@@ -1,6 +1,6 @@
 {
   "name": "singular_cordova_sdk",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "Singular Cordova SDK",
   "cordova": {
     "id": "singular_cordova_sdk",
