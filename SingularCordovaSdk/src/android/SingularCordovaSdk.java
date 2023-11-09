@@ -23,6 +23,7 @@ import android.content.Context;
 import org.json.JSONException;
 import android.os.Looper;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import android.content.Intent;
 
@@ -41,7 +42,7 @@ public class SingularCordovaSdk extends CordovaPlugin {
     }
 
     public static void handleNewIntent(Intent intent) {
-        if(intent == null){
+        if (intent == null) {
             return;
         }
 
@@ -70,7 +71,7 @@ public class SingularCordovaSdk extends CordovaPlugin {
             String refName = args.getString(1);
             String refId = args.getString(2);
             JSONObject passthroughParams = args.getJSONObject(3);
-            this.createReferrerShortLink(url, 
+            this.createReferrerShortLink(url,
                     refName,
                     refId,
                     passthroughParams,
@@ -224,42 +225,36 @@ public class SingularCordovaSdk extends CordovaPlugin {
                 new ShortLinkHandler() {
                     @Override
                     public void onSuccess(final String link) {
-                        try{
+                        try {
                             JSONObject res = new JSONObject();
                             res.put("type","OnSuccess");
                             res.put("data", link);
                             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, res.toString());
                             pluginResult.setKeepCallback(true); // keep callback
                             callbackContext.sendPluginResult(pluginResult);
-                        }catch(JSONException e){
-                            e.printStackTrace();
-                        }
+                        } catch (JSONException e) { }
                     }
 
                     @Override
                     public void onError(final String error) {
-                        try{
+                        try {
                             JSONObject res = new JSONObject();
                             res.put("type","OnError");
                             res.put("data", error);
                             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, res.toString());
                             pluginResult.setKeepCallback(true); // keep callback
                             callbackContext.sendPluginResult(pluginResult);
-                        }catch(JSONException e){
-                            e.printStackTrace();
-                        }
+                        } catch (JSONException e) { }
                     }
                 });
 
-        try{
+        try {
             JSONObject res = new JSONObject();
             res.put("type","Done");
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, res.toString());
             pluginResult.setKeepCallback(true); // keep callback
             callbackContext.sendPluginResult(pluginResult);
-        }catch(JSONException e){
-            e.printStackTrace();
-        }
+        } catch(JSONException e) { }
     }
 
     private void init(JSONObject config, CallbackContext callbackContext) {
@@ -267,15 +262,13 @@ public class SingularCordovaSdk extends CordovaPlugin {
         Context context = this.cordova.getActivity().getApplicationContext();
         Singular.init(context, singularConfig);
 
-        try{
+        try {
             JSONObject res = new JSONObject();
             res.put("type","InitDone");
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, res.toString());
             pluginResult.setKeepCallback(true); // keep callback
             callbackContext.sendPluginResult(pluginResult);
-        }catch(JSONException e){
-            e.printStackTrace();
-        }
+        } catch (JSONException e) { }
     }
 
     private void event(String eventName, CallbackContext callbackContext) {
@@ -286,19 +279,18 @@ public class SingularCordovaSdk extends CordovaPlugin {
     private SingularConfig buildSingularConfig(JSONObject configJson, CallbackContext callbackContext) {
         String apikey = configJson.optString("apikey", null);
         String secret = configJson.optString("secret", null);
-        config = new SingularConfig(apikey, secret);
-        long ddlTimeoutSec = configJson.optLong("ddlTimeoutSec", 0);
 
+        config = new SingularConfig(apikey, secret);
+
+        long ddlTimeoutSec = configJson.optLong("ddlTimeoutSec", 0);
         if (ddlTimeoutSec > 0) {
             config.withDDLTimeoutInSec(ddlTimeoutSec);
         }
 
-         
         singularLinkHandler = new SingularLinkHandler() {
             @Override
             public void onResolved(SingularLinkParams singularLinkParams) {
-
-                try{
+                try {
                     JSONObject res = new JSONObject();
                     JSONObject data = new JSONObject();
                     res.put("type","SingularLinkHandler");
@@ -311,44 +303,35 @@ public class SingularCordovaSdk extends CordovaPlugin {
                     PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, res.toString());
                     pluginResult.setKeepCallback(true); // keep callback
                     callbackContext.sendPluginResult(pluginResult);
-                }catch(JSONException e){
-                    e.printStackTrace();
-                }
-
+                } catch (JSONException e) { }
             }
         };
 
         if (this.cordova.getActivity() != null && this.cordova.getActivity().getIntent() != null) {
             int intentHash = this.cordova.getActivity().getIntent().hashCode();
-
             if (intentHash != currentIntentHash) {
                 currentIntentHash = intentHash;
-
                 long shortLinkResolveTimeout = configJson.optLong("shortLinkResolveTimeout", 10);
                 config.withSingularLink(this.cordova.getActivity().getIntent(), singularLinkHandler, shortLinkResolveTimeout);
             }
         }
 
         String customUserId = configJson.optString("customUserId", null);
-
         if (customUserId != null) {
             config.withCustomUserId(customUserId);
         }
 
         String imei = configJson.optString("imei", null);
-
         if (imei != null) {
             config.withIMEI(imei);
         }
 
         int sessionTimeout = configJson.optInt("sessionTimeout", -1);
-
         if (sessionTimeout >= 0) {
             config.withSessionTimeoutInSec(sessionTimeout);
         }
 
         Object limitDataSharing = configJson.opt("limitDataSharing");
-
         if (limitDataSharing != JSONObject.NULL) {
             config.withLimitDataSharing((boolean)limitDataSharing);
         }
@@ -368,27 +351,38 @@ public class SingularCordovaSdk extends CordovaPlugin {
             config.withLogLevel(logLevel);
         }
 
-        JSONObject globalProperties = configJson.optJSONObject("globalProperties");
+        JSONArray espDomainsArray =  configJson.optJSONArray("espDomains");
+        if (espDomainsArray != null) {
+            List<String> espDomains = new ArrayList<>();
+            try {
+                for(int i = 0; i < espDomainsArray.length(); i++) {
+                    espDomains.add(espDomainsArray.getString(i));
+                }
+            } catch (JSONException e) {
+            }
+            config.withESPDomains(espDomains);
+        }
 
-        // Adding all of the global properties to the singular config
+        String facebookAppId = configJson.optString("facebookAppId", null);
+        if (facebookAppId != null) {
+            config.withFacebookAppId(facebookAppId);
+        }
+
+        JSONObject globalProperties = configJson.optJSONObject("globalProperties");
         if (globalProperties != null) {
             Iterator<String> iter = globalProperties.keys();
             while (iter.hasNext()) {
                 String key = iter.next();
-                try{
+                try {
                     JSONObject property = globalProperties.getJSONObject(key);
                     config.withGlobalProperty(property.getString("Key"),
-                    property.getString("Value"),
-                    property.getBoolean("OverrideExisting"));
-                }catch(JSONException e){
-                    e.printStackTrace();
-                }
-
-
+                            property.getString("Value"),
+                            property.getBoolean("OverrideExisting"));
+                } catch (JSONException e) { }
             }
         }
+
         return config;
-     
     }
 
     private void eventWithArgs(String name, JSONObject args, CallbackContext callbackContext) {
@@ -453,13 +447,13 @@ public class SingularCordovaSdk extends CordovaPlugin {
         JSONObject res = new JSONObject(Singular.getGlobalProperties());
         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, res.toString());
         callbackContext.sendPluginResult(pluginResult);
-    } 
+    }
 
     private void limitDataSharing(boolean limitDataSharingValue, CallbackContext callbackContext) {
         Singular.limitDataSharing(limitDataSharingValue);
     }
 
-    private void getLimitDataSharing(CallbackContext callbackContext) { 
+    private void getLimitDataSharing(CallbackContext callbackContext) {
         boolean res = Singular.getLimitDataSharing();
         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, res? "true": "false");
         callbackContext.sendPluginResult(pluginResult);
@@ -513,9 +507,7 @@ public class SingularCordovaSdk extends CordovaPlugin {
                 args.put(key, jsonObject.get(key));
             }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        } catch (JSONException e) { }
 
         return args;
     }

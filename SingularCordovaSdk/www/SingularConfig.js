@@ -11,16 +11,18 @@ function SingularConfig(apikey, secret) {
         this.collectOAID = false;
         this.enableLogging = false;
         this.clipboardAttribution = false;
+        this.espDomains = [];
+        this.facebookAppId = null;
     }
 
 SingularConfig.prototype.withSessionTimeoutInSec = function(sessionTimeout) {
-        this.sessionTimeout = sessionTimeout;
-        return this;
+    this.sessionTimeout = sessionTimeout;
+    return this;
 }
 
 SingularConfig.prototype.withClipboardAttribution = function() {
-        this.clipboardAttribution = true;
-        return this;
+    this.clipboardAttribution = true;
+    return this;
 }
 
 SingularConfig.prototype.withCustomUserId = function(customUserId) {
@@ -86,7 +88,16 @@ SingularConfig.prototype.withLoggingEnabled = function() {
 SingularConfig.prototype.withLogLevel = function(level) {
     this.logLevel = level;
     return this;
+}
 
+SingularConfig.prototype.withESPDomains = function (espDomains) {
+    this.espDomains = espDomains;
+    return this;
+}
+
+SingularConfig.prototype.withFacebookAppId = function(facebookAppId) {
+    this.facebookAppId = facebookAppId;
+    return this;
 }
 
 module.exports = SingularConfig;

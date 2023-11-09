@@ -28,6 +28,8 @@ var app = {
         singularConfig.withLogLevel(3);
         singularConfig.withSkAdNetworkEnabled(true);
         singularConfig.withManualSkanConversionManagement();
+        singularConfig.withESPDomains(["bit.ly"]);
+        singularConfig.withFacebookAppId("facebook_app_id");
         cordova.plugins.SingularCordovaSdk.init(singularConfig);
     },
 
