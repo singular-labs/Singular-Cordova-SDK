@@ -197,6 +197,12 @@ static SingularCordovaSdk* instance;
         [Singular setSessionTimeout:[sessionTimeout intValue]];
     }
 
+    NSArray *espDomains = [singularConfigDict objectForKey:@"espDomains"];
+
+    if (espDomains) {
+        singularConfig.espDomains = espDomains;
+    }
+
     [Singular start:singularConfig];
 
     NSDictionary* paramsDict = @{
