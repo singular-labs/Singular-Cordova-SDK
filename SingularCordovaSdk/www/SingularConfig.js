@@ -13,6 +13,9 @@ function SingularConfig(apikey, secret) {
         this.clipboardAttribution = false;
         this.espDomains = [];
         this.facebookAppId = null;
+        this.customSdid = null;
+        this.didSetSdidCallback = null;
+        this.sdidReceivedCallback = null;
     }
 
 SingularConfig.prototype.withSessionTimeoutInSec = function(sessionTimeout) {
@@ -99,5 +102,17 @@ SingularConfig.prototype.withFacebookAppId = function(facebookAppId) {
     this.facebookAppId = facebookAppId;
     return this;
 }
+
+SingularConfig.prototype.withDeviceAttributionCallbackHandler = function(deviceAttributionCallbackHandler) {
+    this.deviceAttributionCallbackHandler = deviceAttributionCallbackHandler;
+    return this;
+}
+
+SingularConfig.prototype.withCustomSdid = function(customSdid, didSetSdidCallback, sdidReceivedCallback) {
+    this.customSdid = customSdid;
+    this.didSetSdidCallback = didSetSdidCallback;
+    this.sdidReceivedCallback = sdidReceivedCallback;
+    return this;
+ }
 
 module.exports = SingularConfig;
