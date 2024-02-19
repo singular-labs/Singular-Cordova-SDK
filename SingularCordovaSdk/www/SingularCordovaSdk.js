@@ -1,11 +1,14 @@
 var exec = require('cordova/exec');
-const PLUGIN_VERSION = "1.2.0"
+const PLUGIN_VERSION = "1.3.0"
 const ADMON_REVENUE_EVENT_NAME = '__ADMON_USER_LEVEL_REVENUE__';
 
 module.exports.init = function(singularConfig) {
     var singularLinkHandler = singularConfig.singularLinkHandler;
     var conversionValueUpdatedHandler = singularConfig.conversionValueUpdatedHandler;
     var conversionValuesUpdatedHandler = singularConfig.conversionValuesUpdatedHandler;
+    var deviceAttributionCallbackHandler = singularConfig.deviceAttributionCallbackHandler;
+    var sdidReceivedCallback = singularConfig.sdidReceivedCallback;
+    var didSetSdidCallback = singularConfig.didSetSdidCallback;
     var callback = function(message) {
         var messageObject = JSON.parse(message);
         switch(messageObject.type) {
@@ -18,7 +21,15 @@ module.exports.init = function(singularConfig) {
             case "ConversionValuesUpdatedHandler":
                 conversionValuesUpdatedHandler(messageObject.data);
                 break;
-
+            case "DeviceAttributionCallbackHandler":
+                deviceAttributionCallbackHandler(messageObject.data);
+                break;
+            case "sdidReceivedCallback":
+                sdidReceivedCallback(messageObject.result);
+                break;
+            case "didSetSdidCallback":
+                didSetSdidCallback(messageObject.result);
+                break;
             case "InitDone":
                 break;
         }

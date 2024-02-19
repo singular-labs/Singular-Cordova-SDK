@@ -19,6 +19,8 @@ import com.singular.sdk.SingularAdData;
 import com.singular.sdk.SingularConfig;
 import com.singular.sdk.SingularLinkParams;
 import com.singular.sdk.SingularLinkHandler;
+import com.singular.sdk.SingularDeviceAttributionHandler;
+import com.singular.sdk.SDIDAccessorHandler;
 import android.content.Context;
 import org.json.JSONException;
 import android.os.Looper;
@@ -232,7 +234,7 @@ public class SingularCordovaSdk extends CordovaPlugin {
                             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, res.toString());
                             pluginResult.setKeepCallback(true); // keep callback
                             callbackContext.sendPluginResult(pluginResult);
-                        } catch (JSONException e) { }
+                        } catch (Throwable e) { }
                     }
 
                     @Override
@@ -244,7 +246,7 @@ public class SingularCordovaSdk extends CordovaPlugin {
                             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, res.toString());
                             pluginResult.setKeepCallback(true); // keep callback
                             callbackContext.sendPluginResult(pluginResult);
-                        } catch (JSONException e) { }
+                        } catch (Throwable e) { }
                     }
                 });
 
@@ -254,7 +256,7 @@ public class SingularCordovaSdk extends CordovaPlugin {
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, res.toString());
             pluginResult.setKeepCallback(true); // keep callback
             callbackContext.sendPluginResult(pluginResult);
-        } catch(JSONException e) { }
+        } catch(Throwable e) { }
     }
 
     private void init(JSONObject config, CallbackContext callbackContext) {
@@ -268,7 +270,7 @@ public class SingularCordovaSdk extends CordovaPlugin {
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, res.toString());
             pluginResult.setKeepCallback(true); // keep callback
             callbackContext.sendPluginResult(pluginResult);
-        } catch (JSONException e) { }
+        } catch (Throwable e) { }
     }
 
     private void event(String eventName, CallbackContext callbackContext) {
@@ -303,7 +305,7 @@ public class SingularCordovaSdk extends CordovaPlugin {
                     PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, res.toString());
                     pluginResult.setKeepCallback(true); // keep callback
                     callbackContext.sendPluginResult(pluginResult);
-                } catch (JSONException e) { }
+                } catch (Throwable e) { }
             }
         };
 
@@ -378,9 +380,58 @@ public class SingularCordovaSdk extends CordovaPlugin {
                     config.withGlobalProperty(property.getString("Key"),
                             property.getString("Value"),
                             property.getBoolean("OverrideExisting"));
-                } catch (JSONException e) { }
+                } catch (Throwable e) { }
             }
         }
+
+        config.withSingularDeviceAttribution(new SingularDeviceAttributionHandler() {
+            @Override
+            public void onDeviceAttributionInfoReceived(Map<String, Object> deviceAttributionData) {
+                try {
+                    JSONObject deviceAttributionInfo = new JSONObject();
+                    JSONObject deviceAttributionDataObject = new JSONObject(deviceAttributionData);
+                    deviceAttributionInfo.put("type","DeviceAttributionCallbackHandler");
+                    deviceAttributionInfo.put("data", deviceAttributionDataObject);
+
+                    PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, deviceAttributionInfo.toString());
+                    pluginResult.setKeepCallback(true); // keep callback
+                    callbackContext.sendPluginResult(pluginResult);
+                } catch (Throwable e) { }
+            };
+        });
+
+        // SDID accessor handler
+        String customSdid = configJson.optString("customSdid", null);
+        if (!isValidNonEmptyString(customSdid)) {
+            customSdid = null;
+        }
+        config.withCustomSdid(customSdid, new SDIDAccessorHandler() {
+            @Override
+            public void didSetSdid(String result) {
+                try {
+                    JSONObject didSetSdidData = new JSONObject();
+                    didSetSdidData.put("type", "didSetSdidCallback");
+                    didSetSdidData.put("result", result);
+
+                    PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, didSetSdidData.toString());
+                    pluginResult.setKeepCallback(true); // keep callback
+                    callbackContext.sendPluginResult(pluginResult);
+                } catch (Throwable e) { }
+            }
+
+            @Override
+            public void sdidReceived(String result) {
+                try {
+                    JSONObject sdidReceivedData = new JSONObject();
+                    sdidReceivedData.put("type", "sdidReceivedCallback");
+                    sdidReceivedData.put("result", result);
+
+                    PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, sdidReceivedData.toString());
+                    pluginResult.setKeepCallback(true); // keep callback
+                    callbackContext.sendPluginResult(pluginResult);
+                } catch (Throwable e) { }
+            }
+        });
 
         return config;
     }
@@ -507,9 +558,19 @@ public class SingularCordovaSdk extends CordovaPlugin {
                 args.put(key, jsonObject.get(key));
             }
 
-        } catch (JSONException e) { }
+        } catch (Throwable e) { }
 
         return args;
+    }
+
+    private boolean isValidNonEmptyString(String nullableJavascriptString) {
+        return nullableJavascriptString != null
+                && nullableJavascriptString instanceof String
+                && nullableJavascriptString.length() > 0
+                && !nullableJavascriptString.toLowerCase().equals("null")
+                && !nullableJavascriptString.toLowerCase().equals("undefined")
+                && !nullableJavascriptString.toLowerCase().equals("false")
+                && !nullableJavascriptString.equals("NaN");
     }
 
 }
