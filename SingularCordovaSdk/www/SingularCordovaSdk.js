@@ -1,5 +1,5 @@
 var exec = require('cordova/exec');
-const PLUGIN_VERSION = "1.3.1"
+const PLUGIN_VERSION = "1.3.2"
 const ADMON_REVENUE_EVENT_NAME = '__ADMON_USER_LEVEL_REVENUE__';
 
 module.exports.init = function(singularConfig) {
