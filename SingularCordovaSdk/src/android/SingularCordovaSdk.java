@@ -64,7 +64,12 @@ public class SingularCordovaSdk extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("init")) {
             JSONObject config = args.getJSONObject(0);
-            this.init(config, callbackContext);
+            cordova.getThreadPool().execute(new Runnable() {
+                @Override
+                public void run() {
+                    init(config, callbackContext);
+                }
+            });
             return true;
         }
 
