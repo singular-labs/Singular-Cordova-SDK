@@ -12,7 +12,7 @@
 
 static NSString* apikey;
 static NSString* secret;
-static NSString* _launchOptions;
+static NSDictionary* _launchOptions;
 static SingularCordovaSdk* instance;
 + (NSDictionary*)launchOptions { return _launchOptions; }
 + (void)setLaunchOptions:(NSDictionary*)options { _launchOptions = options; }
@@ -153,7 +153,6 @@ static SingularCordovaSdk* instance;
                            referrerId:refId
                     passthroughParams:passthroughParams
                     completionHandler:^(NSString* data, NSError* error) {
-                        CDVPluginResult* pluginResult = nil;
                         if (error) {
                             NSDictionary* paramsDict = @{
                                 @"type": @"OnError",
@@ -208,108 +207,111 @@ static SingularCordovaSdk* instance;
 
 - (void)init:(CDVInvokedUrlCommand*)command
 {
-    NSDictionary* singularConfigDict = [command.arguments objectAtIndex:0];
-    apikey = [singularConfigDict objectForKey:@"apikey"];
-    secret = [singularConfigDict objectForKey:@"secret"];
     initCallbackID = command.callbackId;
-
-    // General Fields
-    SingularConfig* singularConfig = [[SingularConfig alloc] initWithApiKey:apikey andSecret:secret];
-
-    // Singular Links fields
-    singularConfig.launchOptions = _launchOptions;
-    singularConfig.shortLinkResolveTimeOut = [[singularConfigDict objectForKey:@"shortLinkResolveTimeout"] longValue];
-    singularConfig.singularLinksHandler = ^(SingularLinkParams* params){
-        [self handleSingularLink: params];
-    };
-
-    singularConfig.deviceAttributionCallback = ^(NSDictionary *deviceAttributionInfo) {
-        [self handleDeviceAttribution:deviceAttributionInfo];
-    };
-
-    // Global Properties fields
-    NSDictionary* globalProperties = [singularConfigDict objectForKey:@"globalProperties"];
-    if (globalProperties && [globalProperties count] > 0){
-         for (NSDictionary* property in [globalProperties allValues]) {
-             [singularConfig setGlobalProperty:[property objectForKey:@"Key"]
-                                     withValue:[property objectForKey:@"Value"]
-                              overrideExisting:[[property objectForKey:@"OverrideExisting"] boolValue]];
+    
+    [self.commandDelegate runInBackground:^{
+        NSDictionary* singularConfigDict = [command.arguments objectAtIndex:0];
+        apikey = [singularConfigDict objectForKey:@"apikey"];
+        secret = [singularConfigDict objectForKey:@"secret"];
+        
+        // General Fields
+        SingularConfig* singularConfig = [[SingularConfig alloc] initWithApiKey:apikey andSecret:secret];
+        
+        // Singular Links fields
+        singularConfig.launchOptions = _launchOptions;
+        singularConfig.shortLinkResolveTimeOut = [[singularConfigDict objectForKey:@"shortLinkResolveTimeout"] longValue];
+        singularConfig.singularLinksHandler = ^(SingularLinkParams* params){
+            [self handleSingularLink: params];
+        };
+        
+        singularConfig.deviceAttributionCallback = ^(NSDictionary *deviceAttributionInfo) {
+            [self handleDeviceAttribution:deviceAttributionInfo];
+        };
+        
+        // Global Properties fields
+        NSDictionary* globalProperties = [singularConfigDict objectForKey:@"globalProperties"];
+        if (globalProperties && [globalProperties count] > 0){
+            for (NSDictionary* property in [globalProperties allValues]) {
+                [singularConfig setGlobalProperty:[property objectForKey:@"Key"]
+                                        withValue:[property objectForKey:@"Value"]
+                                 overrideExisting:[[property objectForKey:@"OverrideExisting"] boolValue]];
+            }
         }
-    }
-
-    // SKAN
-    singularConfig.clipboardAttribution = [[singularConfigDict objectForKey:@"clipboardAttribution"] boolValue];
-    singularConfig.skAdNetworkEnabled = [[singularConfigDict objectForKey:@"skAdNetworkEnabled"] boolValue];
-    singularConfig.manualSkanConversionManagement = [[singularConfigDict objectForKey:@"manualSkanConversionManagement"] boolValue];
-    singularConfig.conversionValueUpdatedCallback = ^(NSInteger conversionValue) {
-        [self handleConversionValue: conversionValue];
- 
-    };
-
-    singularConfig.conversionValueUpdatedCallback = ^(NSInteger conversionValue) {
-        [self handleConversionValue: conversionValue];
- 
-    };
-
-    singularConfig.conversionValuesUpdatedCallback = ^(NSNumber * conversionValue, NSNumber * coarse, BOOL lock) {
-        [self handleConversionValues: conversionValue ? [conversionValue intValue] : -1 coarse: coarse ? [coarse intValue] :  -1 lock: lock];
-    };
-
-    singularConfig.waitForTrackingAuthorizationWithTimeoutInterval =
+        
+        // SKAN
+        singularConfig.clipboardAttribution = [[singularConfigDict objectForKey:@"clipboardAttribution"] boolValue];
+        singularConfig.skAdNetworkEnabled = [[singularConfigDict objectForKey:@"skAdNetworkEnabled"] boolValue];
+        singularConfig.manualSkanConversionManagement = [[singularConfigDict objectForKey:@"manualSkanConversionManagement"] boolValue];
+        singularConfig.conversionValueUpdatedCallback = ^(NSInteger conversionValue) {
+            [self handleConversionValue: conversionValue];
+            
+        };
+        
+        singularConfig.conversionValueUpdatedCallback = ^(NSInteger conversionValue) {
+            [self handleConversionValue: conversionValue];
+            
+        };
+        
+        singularConfig.conversionValuesUpdatedCallback = ^(NSNumber * conversionValue, NSNumber * coarse, BOOL lock) {
+            [self handleConversionValues: conversionValue ? [conversionValue intValue] : -1 coarse: coarse ? [coarse intValue] :  -1 lock: lock];
+        };
+        
+        singularConfig.waitForTrackingAuthorizationWithTimeoutInterval =
         [[singularConfigDict objectForKey:@"waitForTrackingAuthorizationWithTimeoutInterval"] intValue];
-
-    NSString* customUserId = [singularConfigDict objectForKey:@"customUserId"];
-    if (customUserId) {
-        [Singular setCustomUserId:customUserId];
-    }
-
-    NSNumber* limitDataSharing = [singularConfigDict objectForKey:@"limitDataSharing"];
-    if (![limitDataSharing isEqual:[NSNull null]]) {
-        [Singular limitDataSharing:[limitDataSharing boolValue]];
-    }
-
-    NSNumber* sessionTimeout = [singularConfigDict objectForKey:@"sessionTimeout"];
-    if (sessionTimeout >= 0) {
-        [Singular setSessionTimeout:[sessionTimeout intValue]];
-    }
-
-    NSArray *espDomains = [singularConfigDict objectForKey:@"espDomains"];
-    if (espDomains) {
-        singularConfig.espDomains = espDomains;
-    }
-
-    // SDID
-    NSString* customSdid = [singularConfigDict objectForKey:@"customSdid"];
-    if (![self isValidNonEmptyString:customSdid]) {
-        customSdid = nil;
-    }
-    
-    singularConfig.customSdid = customSdid;
-    
-    singularConfig.sdidReceivedHandler = ^(NSString *result) {
-        [self handleSdidReceived:result];
-    };
-
-    singularConfig.didSetSdidHandler = ^(NSString *result) {
-        [self handleDidSetSdid:result];
-    };
-
-    [Singular start:singularConfig];
-
-    NSDictionary* paramsDict = @{
-         @"type": @"InitDone",
-    };
-
-    NSError* err;
-    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:paramsDict options:0 error:&err];
-    if (err) {
-        return;
-    }
-
-    NSString* jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
-    [pluginResult setKeepCallbackAsBool:YES];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
+        
+        NSString* customUserId = [singularConfigDict objectForKey:@"customUserId"];
+        if (customUserId) {
+            [Singular setCustomUserId:customUserId];
+        }
+        
+        NSNumber* limitDataSharing = [singularConfigDict objectForKey:@"limitDataSharing"];
+        if (![limitDataSharing isEqual:[NSNull null]]) {
+            [Singular limitDataSharing:[limitDataSharing boolValue]];
+        }
+        
+        NSNumber* sessionTimeout = [singularConfigDict objectForKey:@"sessionTimeout"];
+        if (sessionTimeout >= 0) {
+            [Singular setSessionTimeout:[sessionTimeout intValue]];
+        }
+        
+        NSArray *espDomains = [singularConfigDict objectForKey:@"espDomains"];
+        if (espDomains) {
+            singularConfig.espDomains = espDomains;
+        }
+        
+        // SDID
+        NSString* customSdid = [singularConfigDict objectForKey:@"customSdid"];
+        if (![self isValidNonEmptyString:customSdid]) {
+            customSdid = nil;
+        }
+        
+        singularConfig.customSdid = customSdid;
+        
+        singularConfig.sdidReceivedHandler = ^(NSString *result) {
+            [self handleSdidReceived:result];
+        };
+        
+        singularConfig.didSetSdidHandler = ^(NSString *result) {
+            [self handleDidSetSdid:result];
+        };
+        
+        [Singular start:singularConfig];
+        
+        NSDictionary* paramsDict = @{
+            @"type": @"InitDone",
+        };
+        
+        NSError* err;
+        NSData* jsonData = [NSJSONSerialization dataWithJSONObject:paramsDict options:0 error:&err];
+        if (err) {
+            return;
+        }
+        
+        NSString* jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
+        [pluginResult setKeepCallbackAsBool:YES];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
 }
 
 - (void)event:(CDVInvokedUrlCommand*)command
