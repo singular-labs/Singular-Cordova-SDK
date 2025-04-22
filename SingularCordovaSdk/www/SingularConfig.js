@@ -16,6 +16,8 @@ function SingularConfig(apikey, secret) {
         this.customSdid = null;
         this.didSetSdidCallback = null;
         this.sdidReceivedCallback = null;
+        this.pushNotificationsLinkPaths = [[]];
+        this.limitedIdentifiersEnabled = false;
     }
 
 SingularConfig.prototype.withSessionTimeoutInSec = function(sessionTimeout) {
@@ -112,6 +114,16 @@ SingularConfig.prototype.withCustomSdid = function(customSdid, didSetSdidCallbac
     this.customSdid = customSdid;
     this.didSetSdidCallback = didSetSdidCallback;
     this.sdidReceivedCallback = sdidReceivedCallback;
+    return this;
+ }
+
+SingularConfig.prototype.withPushNotificationsLinkPaths = function(pushNotificationsLinkPaths) {
+    this.pushNotificationsLinkPaths = pushNotificationsLinkPaths;
+    return this;
+}
+
+ SingularConfig.prototype.withLimitedIdentifiersEnabled = function(limitedIdentifiersEnabled) {
+    this.limitedIdentifiersEnabled = limitedIdentifiersEnabled;
     return this;
  }
 

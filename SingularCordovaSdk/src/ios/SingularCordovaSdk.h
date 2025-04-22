@@ -31,12 +31,7 @@
 - (void)setCustomUserId:(CDVInvokedUrlCommand*)command;
 - (void)unsetCustomUserId:(CDVInvokedUrlCommand*)command;
 - (void)pluginInitialize;
+- (void)handlePushNotification:(CDVInvokedUrlCommand*)command;
 + (void)startSessionWithUserActivity:(NSUserActivity*)userActivity;
-
-
-
-
-
-
 
 @end

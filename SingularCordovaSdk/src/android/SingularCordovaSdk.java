@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import android.content.Intent;
 
+
 /**
  * This class echoes a string called from JavaScript.
  */
@@ -37,6 +38,9 @@ public class SingularCordovaSdk extends CordovaPlugin {
     private static int currentIntentHash;
     private static SingularConfig config;
     private static SingularLinkHandler singularLinkHandler;
+    private static String[][] pushNotificationsLinkPaths;
+
+
     private static SingularCordovaSdk instance;
 
     {
@@ -48,16 +52,27 @@ public class SingularCordovaSdk extends CordovaPlugin {
             return;
         }
 
-        // We want to trigger the singular link handler only if it's registered
-        if (config != null &&
-                singularLinkHandler != null &&
-                intent.hashCode() != currentIntentHash &&
-                intent.getData() != null) {
-            currentIntentHash = intent.hashCode();
-            config.withSingularLink(intent, singularLinkHandler);
-            Context context = instance.cordova.getActivity().getApplicationContext();
-            Singular.init(context, config);
+        if (config == null) {
+            return;
         }
+
+        if (intent.hashCode() == currentIntentHash) {
+            return;
+        }
+
+        currentIntentHash = intent.hashCode();
+
+        // We want to trigger the singular link handler only if it's registered
+        if (singularLinkHandler != null && intent.getData() != null) {
+            config.withSingularLink(intent, singularLinkHandler);
+        }
+
+        if (intent.getExtras() != null && intent.getExtras().size() > 0 && pushNotificationsLinkPaths != null && pushNotificationsLinkPaths.length > 0) {
+            config.withPushNotificationPayload(intent, pushNotificationsLinkPaths);
+        }
+
+        Context context = instance.cordova.getActivity().getApplicationContext();
+        Singular.init(context, config);
     }
 
     @Override
@@ -314,12 +329,27 @@ public class SingularCordovaSdk extends CordovaPlugin {
             }
         };
 
-        if (this.cordova.getActivity() != null && this.cordova.getActivity().getIntent() != null) {
-            int intentHash = this.cordova.getActivity().getIntent().hashCode();
+        JSONArray pushNotificationLinkPaths = configJson.optJSONArray("pushNotificationsLinkPaths");
+        String[][] pushSelectors = convertTo2DArray(pushNotificationLinkPaths);
+
+        if (pushSelectors != null) {
+            pushNotificationsLinkPaths = pushSelectors;
+        }
+
+        if (this.cordova.getActivity() != null &&  this.cordova.getActivity().getIntent() != null) {
+            Intent intent = this.cordova.getActivity().getIntent();
+
+            int intentHash = intent.hashCode();
             if (intentHash != currentIntentHash) {
                 currentIntentHash = intentHash;
                 long shortLinkResolveTimeout = configJson.optLong("shortLinkResolveTimeout", 10);
-                config.withSingularLink(this.cordova.getActivity().getIntent(), singularLinkHandler, shortLinkResolveTimeout);
+                config.withSingularLink(intent, singularLinkHandler, shortLinkResolveTimeout);
+
+                if (intent.getExtras() != null && intent.getExtras().size() > 0) {
+                    if (pushNotificationsLinkPaths != null) {
+                        config.withPushNotificationPayload(intent, pushNotificationsLinkPaths);
+                    }
+                }
             }
         }
 
@@ -351,6 +381,11 @@ public class SingularCordovaSdk extends CordovaPlugin {
         boolean enableLogging = configJson.optBoolean("enableLogging", false);
         if (enableLogging) {
             config.withLoggingEnabled();
+        }
+
+        boolean limitedIdentifiersEnabled = configJson.optBoolean("limitedIdentifiersEnabled", false);
+        if (limitedIdentifiersEnabled) {
+            config.withLimitedIdentifiersEnabled();
         }
 
         int logLevel = configJson.optInt("logLevel", -1);
@@ -439,6 +474,30 @@ public class SingularCordovaSdk extends CordovaPlugin {
         });
 
         return config;
+    }
+
+
+
+    private String[][] convertTo2DArray(JSONArray jsonArray) {
+        try {
+            if (jsonArray == null || jsonArray.length() <= 0) {
+                return null;
+            }
+
+            String[][] result = new String[jsonArray.length()][];
+
+            for (int outerIndex = 0; outerIndex < jsonArray.length(); outerIndex++) {
+                JSONArray innerArray = jsonArray.getJSONArray(outerIndex);
+                result[outerIndex] = new String[innerArray.length()];
+                for (int innerIndex = 0; innerIndex < innerArray.length(); innerIndex++) {
+                    result[outerIndex][innerIndex] = innerArray.getString(innerIndex);
+                }
+            }
+
+            return result;
+        } catch (Throwable throwable) {
+            return null;
+        }
     }
 
     private void eventWithArgs(String name, JSONObject args, CallbackContext callbackContext) {

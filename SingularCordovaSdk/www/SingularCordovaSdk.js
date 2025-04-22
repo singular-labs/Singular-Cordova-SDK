@@ -1,5 +1,5 @@
 var exec = require('cordova/exec');
-const PLUGIN_VERSION = "1.5.0"
+const PLUGIN_VERSION = "1.6.0"
 const ADMON_REVENUE_EVENT_NAME = '__ADMON_USER_LEVEL_REVENUE__';
 
 module.exports.init = function(singularConfig) {
@@ -13,22 +13,34 @@ module.exports.init = function(singularConfig) {
         var messageObject = JSON.parse(message);
         switch(messageObject.type) {
             case "SingularLinkHandler":
-                singularLinkHandler(messageObject.data);
+                if (typeof singularLinkHandler === "function") {
+                    singularLinkHandler(messageObject.data);
+                }
                 break;
             case "ConversionValueUpdatedHandler":
-                conversionValueUpdatedHandler(messageObject.data);
+                if (typeof conversionValueUpdatedHandler === "function") {
+                    conversionValueUpdatedHandler(messageObject.data);
+                }
                 break;
             case "ConversionValuesUpdatedHandler":
-                conversionValuesUpdatedHandler(messageObject.data);
+                if (typeof conversionValuesUpdatedHandler === "function") {
+                    conversionValuesUpdatedHandler(messageObject.data);
+                }
                 break;
             case "DeviceAttributionCallbackHandler":
-                deviceAttributionCallbackHandler(messageObject.data);
+                if (typeof deviceAttributionCallbackHandler === "function") {
+                   deviceAttributionCallbackHandler(messageObject.data);
+                }
                 break;
             case "sdidReceivedCallback":
-                sdidReceivedCallback(messageObject.result);
+                if (typeof sdidReceivedCallback === "function") {
+                    sdidReceivedCallback(messageObject.result);
+                }
                 break;
             case "didSetSdidCallback":
-                didSetSdidCallback(messageObject.result);
+                if (typeof didSetSdidCallback === "function") {
+                    didSetSdidCallback(messageObject.result);
+                }
                 break;
             case "InitDone":
                 break;
@@ -196,3 +208,6 @@ module.exports.unsetCustomUserId = function(userId) {
     exec(function(){}, function(){}, 'SingularCordovaSdk', 'unsetCustomUserId', []);   
 }
 
+module.exports.handlePushNotification = function(pushNotificationPayload) {
+    exec(function(){}, function(){}, 'SingularCordovaSdk', 'handlePushNotification', [pushNotificationPayload]);
+}
