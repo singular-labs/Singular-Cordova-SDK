@@ -236,6 +236,12 @@ public class SingularCordovaSdk extends CordovaPlugin {
             return true;
         }
 
+        if (action.equals("setLimitAdvertisingIdentifiers")) {
+            Boolean value = args.getBoolean(0);
+            this.setLimitAdvertisingIdentifiers(value, callbackContext);
+            return true;
+        }
+
         return false;
     }
 
@@ -400,7 +406,7 @@ public class SingularCordovaSdk extends CordovaPlugin {
         }
 
         JSONArray brandedDomainsArray = configJson.optJSONArray("brandedDomains");
-        List<String> brandedDomainsList = convertJsonArrayToList(brandedDomainsArray);
+        List<String> brandedDomainsList = convertJSONArrayToList(brandedDomainsArray);
         if (brandedDomainsList != null && brandedDomainsList.size() > 0) {
             config.withBrandedDomains(brandedDomainsList);
         }
