@@ -383,9 +383,9 @@ public class SingularCordovaSdk extends CordovaPlugin {
             config.withLoggingEnabled();
         }
 
-        boolean limitedIdentifiersEnabled = configJson.optBoolean("limitedIdentifiersEnabled", false);
-        if (limitedIdentifiersEnabled) {
-            config.withLimitedIdentifiersEnabled();
+        boolean limitAdvertisingIdentifiers = configJson.optBoolean("limitAdvertisingIdentifiers", false);
+        if (limitAdvertisingIdentifiers) {
+            config.withLimitAdvertisingIdentifiers();
         }
 
         int logLevel = configJson.optInt("logLevel", -1);
@@ -394,15 +394,15 @@ public class SingularCordovaSdk extends CordovaPlugin {
         }
 
         JSONArray espDomainsArray =  configJson.optJSONArray("espDomains");
-        if (espDomainsArray != null) {
-            List<String> espDomains = new ArrayList<>();
-            try {
-                for(int i = 0; i < espDomainsArray.length(); i++) {
-                    espDomains.add(espDomainsArray.getString(i));
-                }
-            } catch (JSONException e) {
-            }
-            config.withESPDomains(espDomains);
+        List<String> espDomainsList = convertJSONArrayToList(espDomainsArray);
+        if (espDomainsList != null && espDomainsList.size() > 0) {
+            config.withESPDomains(espDomainsList);
+        }
+
+        JSONArray brandedDomainsArray = configJson.optJSONArray("brandedDomains");
+        List<String> brandedDomainsList = convertJsonArrayToList(brandedDomainsArray);
+        if (brandedDomainsList != null && brandedDomainsList.size() > 0) {
+            config.withBrandedDomains(brandedDomainsList);
         }
 
         String facebookAppId = configJson.optString("facebookAppId", null);
@@ -476,7 +476,22 @@ public class SingularCordovaSdk extends CordovaPlugin {
         return config;
     }
 
+    private List<String> convertJSONArrayToList(JSONArray jsonArray) {
+        try {
+            if (jsonArray == null || jsonArray.length() <= 0) {
+                return null;
+            }
 
+            List<String> result = new ArrayList<>();
+            for(int i = 0; i < jsonArray.length(); i++) {
+                result.add(jsonArray.getString(i));
+            }
+
+            return result;
+        } catch (Throwable throwable) {
+            return null;
+        }
+    }
 
     private String[][] convertTo2DArray(JSONArray jsonArray) {
         try {
@@ -606,6 +621,11 @@ public class SingularCordovaSdk extends CordovaPlugin {
 
     private void setSDKVersion(String wrapper, String version, CallbackContext callbackContext) {
         Singular.setWrapperNameAndVersion(wrapper, version);
+        callbackContext.success("ok");
+    }
+
+    private void setLimitAdvertisingIdentifiers(boolean limitAdvertisingIdentifiers, CallbackContext callbackContext) {
+        Singular.setLimitAdvertisingIdentifiers(limitAdvertisingIdentifiers);
         callbackContext.success("ok");
     }
 

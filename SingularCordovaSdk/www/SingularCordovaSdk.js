@@ -1,5 +1,5 @@
 var exec = require('cordova/exec');
-const PLUGIN_VERSION = "1.6.0"
+const PLUGIN_VERSION = "1.7.0"
 const ADMON_REVENUE_EVENT_NAME = '__ADMON_USER_LEVEL_REVENUE__';
 
 module.exports.init = function(singularConfig) {
@@ -210,4 +210,8 @@ module.exports.unsetCustomUserId = function(userId) {
 
 module.exports.handlePushNotification = function(pushNotificationPayload) {
     exec(function(){}, function(){}, 'SingularCordovaSdk', 'handlePushNotification', [pushNotificationPayload]);
+}
+
+module.exports.setLimitAdvertisingIdentifiers = function(enabled) {
+    exec(function(){}, function(){}, 'SingularCordovaSdk', 'setLimitAdvertisingIdentifiers', [enabled]);
 }
