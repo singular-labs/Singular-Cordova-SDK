@@ -16,6 +16,7 @@ function SingularConfig(apikey, secret) {
         this.customSdid = null;
         this.didSetSdidCallback = null;
         this.sdidReceivedCallback = null;
+        this.deviceAttributionCallbackHandler = null;
         this.pushNotificationsLinkPaths = [[]];
         this.limitAdvertisingIdentifiers = false;
         this.brandedDomains = [];
