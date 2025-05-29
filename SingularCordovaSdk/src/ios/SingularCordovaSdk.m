@@ -283,14 +283,19 @@ static SingularCordovaSdk* instance;
         if (espDomains) {
             singularConfig.espDomains = espDomains;
         }
-        
+
+        NSArray *brandedDomains = [singularConfigDict objectForKey:@"brandedDomains"];
+        if (brandedDomains) {
+            singularConfig.brandedDomains = brandedDomains;
+        }
+
         // SDID
         NSString* customSdid = [singularConfigDict objectForKey:@"customSdid"];
         if (![self isValidNonEmptyString:customSdid]) {
             customSdid = nil;
         }
 
-        singularConfig.limitedIdentifiersEnabled = [[singularConfigDict objectForKey:@"limitedIdentifiersEnabled"] boolValue];
+        singularConfig.limitAdvertisingIdentifiers = [[singularConfigDict objectForKey:@"limitAdvertisingIdentifiers"] boolValue];
         
         singularConfig.customSdid = customSdid;
         
@@ -447,7 +452,7 @@ static SingularCordovaSdk* instance;
 - (void)skanUpdateConversionValue:(CDVInvokedUrlCommand*)command
 {
     NSNumber* conversionValue = [command.arguments objectAtIndex:0];
-    BOOL res = [Singular skanUpdateConversionValue:[conversionValue intValue] ];
+    BOOL res = [Singular skanUpdateConversionValue:[conversionValue intValue]];
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:res? @"true": @"false"];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
 }
@@ -534,6 +539,14 @@ static SingularCordovaSdk* instance;
     [Singular unsetCustomUserId];
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"ok" ];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId]; 
+}
+
+- (void)setLimitAdvertisingIdentifiers:(CDVInvokedUrlCommand*)command
+{
+    NSNumber *limitAdvertisingIdentifiers = [command.arguments objectAtIndex:0];
+    [Singular setLimitAdvertisingIdentifiers:[limitAdvertisingIdentifiers boolValue]];
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"ok" ];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (NSData *)convertHexStringToDataBytes:(NSString *)hexString {

@@ -16,8 +16,10 @@ function SingularConfig(apikey, secret) {
         this.customSdid = null;
         this.didSetSdidCallback = null;
         this.sdidReceivedCallback = null;
+        this.deviceAttributionCallbackHandler = null;
         this.pushNotificationsLinkPaths = [[]];
-        this.limitedIdentifiersEnabled = false;
+        this.limitAdvertisingIdentifiers = false;
+        this.brandedDomains = [];
     }
 
 SingularConfig.prototype.withSessionTimeoutInSec = function(sessionTimeout) {
@@ -122,9 +124,14 @@ SingularConfig.prototype.withPushNotificationsLinkPaths = function(pushNotificat
     return this;
 }
 
- SingularConfig.prototype.withLimitedIdentifiersEnabled = function(limitedIdentifiersEnabled) {
-    this.limitedIdentifiersEnabled = limitedIdentifiersEnabled;
+ SingularConfig.prototype.withLimitAdvertisingIdentifiers = function(limitAdvertisingIdentifiers) {
+    this.limitAdvertisingIdentifiers = limitAdvertisingIdentifiers;
     return this;
  }
+
+SingularConfig.prototype.withBrandedDomains = function (brandedDomains) {
+    this.brandedDomains = brandedDomains;
+    return this;
+}
 
 module.exports = SingularConfig;
