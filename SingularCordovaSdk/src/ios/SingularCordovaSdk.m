@@ -263,7 +263,10 @@ static SingularCordovaSdk* instance;
         
         singularConfig.waitForTrackingAuthorizationWithTimeoutInterval =
         [[singularConfigDict objectForKey:@"waitForTrackingAuthorizationWithTimeoutInterval"] intValue];
-        
+
+        singularConfig.enableOdmWithTimeoutInterval =
+                [[singularConfigDict objectForKey:@"enableOdmWithTimeoutInterval"] intValue];
+
         NSString* customUserId = [singularConfigDict objectForKey:@"customUserId"];
         if (customUserId) {
             [Singular setCustomUserId:customUserId];
