@@ -16,10 +16,10 @@ function SingularConfig(apikey, secret) {
         this.customSdid = null;
         this.didSetSdidCallback = null;
         this.sdidReceivedCallback = null;
-        this.deviceAttributionCallbackHandler = null;
         this.pushNotificationsLinkPaths = [[]];
         this.limitAdvertisingIdentifiers = false;
         this.brandedDomains = [];
+        this.enableOdmWithTimeoutInterval = -1;
     }
 
 SingularConfig.prototype.withSessionTimeoutInSec = function(sessionTimeout) {
@@ -131,6 +131,11 @@ SingularConfig.prototype.withPushNotificationsLinkPaths = function(pushNotificat
 
 SingularConfig.prototype.withBrandedDomains = function (brandedDomains) {
     this.brandedDomains = brandedDomains;
+    return this;
+}
+
+SingularConfig.prototype.withEnableOdmWithTimeoutInterval = function (enableOdmWithTimeoutInterval) {
+    this.enableOdmWithTimeoutInterval = enableOdmWithTimeoutInterval;
     return this;
 }
 
