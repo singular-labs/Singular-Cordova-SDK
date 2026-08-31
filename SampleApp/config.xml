@@ -7,6 +7,9 @@
     </author>
     <preference name="allowFileAccessFromFileURLs" value="true" />
     <preference name="allowUniversalAccessFromFileURLs" value="true" />
+    <preference name="GradlePluginGoogleServicesEnabled" value="true" />
+    <preference name="GradlePluginGoogleServicesVersion" value="4.3.3" />
+
     <content src="index.html" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />

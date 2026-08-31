@@ -13,9 +13,27 @@
 static NSString* apikey;
 static NSString* secret;
 static NSDictionary* _launchOptions;
+static NSUserActivity* pendingUserActivity;
+static SingularConfig* currentConfig;
 static SingularCordovaSdk* instance;
 + (NSDictionary*)launchOptions { return _launchOptions; }
-+ (void)setLaunchOptions:(NSDictionary*)options { _launchOptions = options; }
+
++ (dispatch_queue_t)singularQueue {
+    static dispatch_queue_t queue;
+    static dispatch_once_t onceToken;
+
+    dispatch_once(&onceToken, ^{
+        queue = dispatch_queue_create("net.singular.cordova.sdk", DISPATCH_QUEUE_SERIAL);
+    });
+
+    return queue;
+}
+
++ (void)setLaunchOptions:(NSDictionary*)options {
+    dispatch_async([self singularQueue], ^{
+        _launchOptions = options;
+    });
+}
 
 - (void)pluginInitialize
 {
@@ -29,13 +47,21 @@ static SingularCordovaSdk* instance;
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-+ (void)startSessionWithUserActivity:(NSUserActivity*)userActivity{
-    [Singular startSession:apikey
-                   withKey:secret
-           andUserActivity:userActivity
-   withSingularLinkHandler:^(SingularLinkParams* params){
-        [instance handleSingularLink:params];
-    }];
++ (void)startSessionWithUserActivity:(NSUserActivity*)userActivity {
+    dispatch_async([self singularQueue], ^{
+        if (!currentConfig) {
+            pendingUserActivity = userActivity;
+            return;
+        }
+
+        [Singular startSession:apikey
+                       withKey:secret
+               andUserActivity:userActivity
+       withSingularLinkHandler:^(SingularLinkParams* params){
+            [instance handleSingularLink:params];
+        }
+    andShortLinkResolveTimeout:currentConfig.shortLinkResolveTimeOut];
+    });
 }
 
 - (void)handleSingularLink: (SingularLinkParams* )params{
@@ -212,11 +238,36 @@ static SingularCordovaSdk* instance;
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+// The JS withLogLevel() API takes android.util.Log style levels
+// Verbose=2, Debug=3, Info=4, Warn=5, Error=6, Assert=7
+
+// iOS native SDK log levels (SingularLogLevel)
+// None=0, Error=1, Warning=2, Info=3, Debug=4, Verbose=5
+
++ (SingularLogLevel)mapCordovaLogLevelToiOS:(NSInteger)cordovaLogLevel {
+    switch (cordovaLogLevel) {
+        case 2: return SingularLogLevelVerbose;
+        case 3: return SingularLogLevelDebug;
+        case 4: return SingularLogLevelInfo;
+        case 5: return SingularLogLevelWarning;
+        case 6: return SingularLogLevelError;
+        case 7: return SingularLogLevelNone;
+        default: return SingularLogLevelError;
+    }
+}
+
++ (void)applyLoggingConfig:(SingularConfig *)config
+             enableLogging:(BOOL)enableLogging
+                  logLevel:(NSInteger)logLevel {
+    config.enableLogging = enableLogging;
+    config.logLevel = [self mapCordovaLogLevelToiOS:logLevel];
+}
+
 - (void)init:(CDVInvokedUrlCommand*)command
 {
     initCallbackID = command.callbackId;
     
-    [self.commandDelegate runInBackground:^{
+    dispatch_async([SingularCordovaSdk singularQueue], ^{
         NSDictionary* singularConfigDict = [command.arguments objectAtIndex:0];
         apikey = [singularConfigDict objectForKey:@"apikey"];
         secret = [singularConfigDict objectForKey:@"secret"];
@@ -252,11 +303,7 @@ static SingularCordovaSdk* instance;
         singularConfig.conversionValueUpdatedCallback = ^(NSInteger conversionValue) {
             [self handleConversionValue: conversionValue];
         };
-        
-        singularConfig.conversionValueUpdatedCallback = ^(NSInteger conversionValue) {
-            [self handleConversionValue: conversionValue];
-        };
-        
+
         singularConfig.conversionValuesUpdatedCallback = ^(NSNumber * conversionValue, NSNumber * coarse, BOOL lock) {
             [self handleConversionValues: conversionValue ? [conversionValue intValue] : -1 coarse: coarse ? [coarse intValue] :  -1 lock: lock];
         };
@@ -273,7 +320,7 @@ static SingularCordovaSdk* instance;
         }
         
         NSNumber* limitDataSharing = [singularConfigDict objectForKey:@"limitDataSharing"];
-        if (![limitDataSharing isEqual:[NSNull null]]) {
+        if (limitDataSharing != nil && ![limitDataSharing isEqual:[NSNull null]]) {
             [Singular limitDataSharing:[limitDataSharing boolValue]];
         }
         
@@ -299,6 +346,11 @@ static SingularCordovaSdk* instance;
         }
 
         singularConfig.limitAdvertisingIdentifiers = [[singularConfigDict objectForKey:@"limitAdvertisingIdentifiers"] boolValue];
+
+        NSNumber* logLevel = [singularConfigDict objectForKey:@"logLevel"];
+        [SingularCordovaSdk applyLoggingConfig:singularConfig
+                                 enableLogging:[[singularConfigDict objectForKey:@"enableLogging"] boolValue]
+                                      logLevel:[logLevel isKindOfClass:[NSNumber class]] ? [logLevel integerValue] : -1];
         
         singularConfig.customSdid = customSdid;
         
@@ -313,7 +365,13 @@ static SingularCordovaSdk* instance;
         // push
         singularConfig.pushNotificationLinkPath = [singularConfigDict objectForKey:@"pushNotificationsLinkPaths"];
 
+        singularConfig.userActivity = pendingUserActivity;
+        pendingUserActivity = nil;
+        _launchOptions = nil;
+
         [Singular start:singularConfig];
+
+        currentConfig = singularConfig;
         
         NSDictionary* paramsDict = @{
             @"type": @"InitDone",
@@ -329,7 +387,7 @@ static SingularCordovaSdk* instance;
         CDVPluginResult*  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
         [pluginResult setKeepCallbackAsBool:YES];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-    }];
+    });
 }
 
 - (void)event:(CDVInvokedUrlCommand*)command

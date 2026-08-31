@@ -375,8 +375,8 @@ public class SingularCordovaSdk extends CordovaPlugin {
         }
 
         Object limitDataSharing = configJson.opt("limitDataSharing");
-        if (limitDataSharing != JSONObject.NULL) {
-            config.withLimitDataSharing((boolean)limitDataSharing);
+        if (limitDataSharing != null && limitDataSharing != JSONObject.NULL) {
+            config.withLimitDataSharing((boolean) limitDataSharing);
         }
 
         boolean collectOAID = configJson.optBoolean("collectOAID", false);

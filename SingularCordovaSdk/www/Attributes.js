@@ -30,5 +30,6 @@ module.exports = {
 	sngAttrSuccess:"sng_attr_success",
 	sngAttrTransactionId:"sng_attr_transaction_id",
 	sngAttrTutorialId:"sng_attr_tutorial_id",
-	sngAttrValid:"sng_attr_valid"
+	sngAttrValid:"sng_attr_valid",
+	sngAttrLimitDataSharing:"sng_attr_limit_data_sharing"
 }

@@ -32,6 +32,6 @@
 - (void)unsetCustomUserId:(CDVInvokedUrlCommand*)command;
 - (void)pluginInitialize;
 - (void)handlePushNotification:(CDVInvokedUrlCommand*)command;
-+ (void)startSessionWithUserActivity:(NSUserActivity*)userActivity;
++ (void)startSessionWithUserActivity:(NSUserActivity*)userActivity NS_SWIFT_NAME(startSessionWithUserActivity(_:));
 
 @end
